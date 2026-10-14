@@ -2,6 +2,7 @@
 
 ## 1.3.0
 
+- `README.md`: la instalación en Claude Desktop explica cómo armar un ZIP sin los manifiestos de plugin, que Desktop rechaza.
 - Calibración con 6 textos humanos de 2010 (10.909 palabras), usados como control: toda marca es un falso positivo. Resultados agregados en `docs/calibracion.md`.
 - `scripts/marcar.py` junta los saltos de línea de los PDF, quita espacios dobles y pega palabras cortadas por guion antes de buscar. En un .pptx no junta líneas, porque cada viñeta es una línea.
 - `scripts/marcar.py`: el guion y la semiraya en §8 cuentan con 2 marcas por párrafo; "de alguna manera" en §9 también; sale "imperdible" de §16, "cuenta con" de §18 y los meses con mayúscula de §21; "eventualmente" en §27 solo al abrir una oración; la coma antes de "y" en §21 solo en series; "incluyendo", "dependiendo", "hablando", "siendo" y similares no cuentan como gerundio colgado en §15.

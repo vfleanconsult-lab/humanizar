@@ -43,7 +43,15 @@ npx skills add vfleanconsult-lab/humanizar --global --agent claude-code
 
 ### Claude.ai y Claude Desktop
 
-Descarga este repositorio como ZIP (**Code → Download ZIP**) y súbelo como skill en Configuración → Capacidades.
+El ZIP de GitHub (**Code → Download ZIP**) no sirve: incluye los manifiestos de plugin (`.claude-plugin/`) y Claude Desktop los rechaza con "A skill cannot contain a plugin manifest". Arma un ZIP solo con la skill:
+
+```bash
+git clone https://github.com/vfleanconsult-lab/humanizar.git
+cd humanizar
+git archive --format=zip --prefix=humanizar/ -o humanizar.zip HEAD -- . ':(exclude).claude-plugin' ':(exclude).cursor-plugin' ':(exclude).github'
+```
+
+Sube `humanizar.zip` como skill en Configuración → Capacidades. Si ya tenías una versión instalada, bórrala antes.
 
 ### Codex y otros agentes
 
