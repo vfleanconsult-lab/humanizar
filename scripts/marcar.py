@@ -3,6 +3,7 @@
 
 Uso:
     python3 scripts/marcar.py archivo.txt
+    python3 scripts/marcar.py presentacion.pptx
     pbpaste | python3 scripts/marcar.py
 
 Solo busca las señales que se pueden detectar con palabras y puntuación.
@@ -14,7 +15,9 @@ from __future__ import annotations
 
 import re
 import sys
-from pathlib import Path
+import zipfile
+from pathlib import Path, PurePosixPath
+from xml.etree import ElementTree
 
 # Cada patrón: (número en SKILL.md, nombre, expresión regular[, descartar]).
 # "descartar(texto, marca)" devuelve True cuando la marca es un falso positivo conocido.
@@ -133,6 +136,73 @@ PATRONES: list[tuple] = [
 ]
 
 
+# Presentaciones (.pptx). Un .pptx es un ZIP con un XML por lámina.
+NS = {
+    "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+    "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+    "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    "rel": "http://schemas.openxmlformats.org/package/2006/relationships",
+}
+TITULOS = {"title", "ctrTitle"}
+
+
+def _destinos(pptx: zipfile.ZipFile, parte: str) -> dict[str, str]:
+    """Lee las relaciones de una parte del paquete: {id: ruta dentro del ZIP}."""
+    ruta = PurePosixPath(parte)
+    rels = ruta.parent / "_rels" / f"{ruta.name}.rels"
+    if str(rels) not in pptx.namelist():
+        return {}
+    destinos = {}
+    for rel in ElementTree.fromstring(pptx.read(str(rels))).findall("rel:Relationship", NS):
+        destino = PurePosixPath(ruta.parent, rel.get("Target", ""))
+        partes: list[str] = []
+        for trozo in destino.parts:
+            if trozo == "..":
+                partes.pop()
+            else:
+                partes.append(trozo)
+        destinos[rel.get("Id", "")] = "/".join(partes)
+    return destinos
+
+
+def _texto_de_formas(xml: bytes, solo_cuerpo: bool = False) -> str:
+    """Une el texto de cada cuadro. Los títulos llevan "# " para que §20 los revise."""
+    bloques = []
+    for forma in ElementTree.fromstring(xml).iter(f"{{{NS['p']}}}sp"):
+        marcador = forma.find(".//p:nvPr/p:ph", NS)
+        tipo = marcador.get("type", "body") if marcador is not None else None
+        if solo_cuerpo and tipo != "body":
+            continue
+        lineas = ["".join(t.text or "" for t in parrafo.iter(f"{{{NS['a']}}}t")).strip()
+                  for parrafo in forma.iter(f"{{{NS['a']}}}p")]
+        lineas = [linea for linea in lineas if linea]
+        if not lineas:
+            continue
+        if tipo in TITULOS:
+            lineas = ["# " + " ".join(lineas)]
+        bloques.append("\n".join(lineas))
+    return "\n\n".join(bloques)
+
+
+def leer_pptx(ruta: Path) -> list[tuple[int, str]]:
+    """Devuelve [(número de lámina, texto de la lámina y sus notas)] en el orden de la presentación."""
+    with zipfile.ZipFile(ruta) as pptx:
+        principal = "ppt/presentation.xml"
+        destinos = _destinos(pptx, principal)
+        orden = ElementTree.fromstring(pptx.read(principal)).findall("p:sldIdLst/p:sldId", NS)
+        laminas = []
+        for numero, lamina in enumerate(orden, start=1):
+            parte = destinos[lamina.get(f"{{{NS['r']}}}id")]
+            texto = _texto_de_formas(pptx.read(parte))
+            notas = [d for d in _destinos(pptx, parte).values() if "notesSlide" in d]
+            if notas:
+                texto_notas = _texto_de_formas(pptx.read(notas[0]), solo_cuerpo=True)
+                if texto_notas:
+                    texto += "\n\n" + texto_notas
+            laminas.append((numero, texto))
+        return laminas
+
+
 def marcar(texto: str) -> list[tuple[int, str, list[str]]]:
     texto = INDICE.sub("", texto)
     resultados = []
@@ -152,21 +222,34 @@ def marcar(texto: str) -> list[tuple[int, str, list[str]]]:
     return resultados
 
 
-def main() -> None:
-    if len(sys.argv) > 1:
-        texto = Path(sys.argv[1]).read_text(encoding="utf-8")
-    else:
-        texto = sys.stdin.read()
-    palabras = max(len(texto.split()), 1)
-    resultados = marcar(texto)
-    total = sum(len(h) for _, _, h in resultados)
+def informar(resultados: list[tuple[int, str, list[str]]], sangria: str = "") -> None:
+    for numero, nombre, hallazgos in resultados:
+        ejemplos = "; ".join(dict.fromkeys(hallazgos))[:160]
+        print(f"{sangria}§{numero:<3} {nombre} ({len(hallazgos)}): {ejemplos}")
 
+
+def main() -> None:
+    ruta = Path(sys.argv[1]) if len(sys.argv) > 1 else None
+    if ruta and ruta.suffix.lower() == ".pptx":
+        laminas = leer_pptx(ruta)
+        texto = "\n\n".join(t for _, t in laminas)
+        resultados = marcar(texto)
+        for numero, texto_lamina in laminas:
+            if lamina := marcar(texto_lamina):
+                print(f"Lámina {numero}")
+                informar(lamina, "  ")
+        if resultados:
+            print("\nTotal de la presentación")
+    else:
+        texto = ruta.read_text(encoding="utf-8") if ruta else sys.stdin.read()
+        resultados = marcar(texto)
+
+    palabras = max(len(texto.split()), 1)
+    total = sum(len(h) for _, _, h in resultados)
     if not resultados:
         print(f"Sin señales detectables en {palabras} palabras.")
         return
-    for numero, nombre, hallazgos in resultados:
-        ejemplos = "; ".join(dict.fromkeys(hallazgos))[:160]
-        print(f"§{numero:<3} {nombre} ({len(hallazgos)}): {ejemplos}")
+    informar(resultados)
     densidad = total / palabras * 100
     print(f"\n{total} señales en {palabras} palabras: {densidad:.1f} por cada 100 palabras.")
     print("Referencia de densidad en docs/calibracion.md; compara con textos tuyos del mismo tipo.")

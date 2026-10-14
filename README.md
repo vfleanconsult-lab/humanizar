@@ -89,13 +89,27 @@ Ahora humaniza este texto:
 
 Humanizar imita el ritmo, el vocabulario, la puntuación y la variedad del español de la muestra (chilena, mexicana, rioplatense, peninsular u otra), incluidas las rayas si las usas.
 
+### Presentaciones
+
+En una presentación, sobre todo en las de estudio con mucho texto, Humanizar trabaja lámina por lámina. Revisa como prosa los párrafos y las notas del orador, deja tranquilas las viñetas cortas y la lámina de agenda, propone títulos que digan la conclusión de la lámina en vez del tema, y no alarga el texto para que siga cabiendo en su cuadro. Entrega una tabla por lámina con el original, las señales y la propuesta; edita el archivo solo si se lo pides.
+
+```
+/humanizar
+
+Revisa esta presentación. No cambies cifras ni gráficos.
+[adjunta el .pptx]
+```
+
 ## Detector rápido
 
 `scripts/marcar.py` marca las señales que se pueden encontrar con palabras y puntuación. No reemplaza la skill: las señales de estructura necesitan leer el texto completo.
 
 ```bash
 python3 scripts/marcar.py mi-texto.txt
+python3 scripts/marcar.py estudio.pptx
 ```
+
+Con un .pptx indica en qué lámina está cada señal y revisa también las notas del orador.
 
 ```
 §1   No es X, es Y (1): no es solo una tarea administrativa, es
