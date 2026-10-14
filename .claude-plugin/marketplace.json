@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "humanizar",
+  "owner": {
+    "name": "vfleanconsult-lab",
+    "url": "https://github.com/vfleanconsult-lab"
+  },
+  "description": "Instala Humanizar como plugin de Claude.",
+  "plugins": [
+    {
+      "name": "humanizar",
+      "source": "./",
+      "description": "Reescribe textos en español que suenan a IA para que suenen a quien los firma, sin cambiar lo que dicen.",
+      "license": "MIT",
+      "keywords": ["escritura", "edición", "humanizar", "español", "estilo"]
+    }
+  ]
+}
