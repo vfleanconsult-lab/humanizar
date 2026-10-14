@@ -120,7 +120,7 @@ Con un .pptx indica en qué lámina está cada señal y revisa también las nota
 23 señales en 105 palabras: 21.9 por cada 100 palabras.
 ```
 
-Se calibró con 9 informes de un curso de negocios: ajusta los falsos positivos de los informes (índices, títulos en mayúsculas, "costos asociados a") y detecta negritas con dos puntos (§19) y frases sobre el propio informe (§25). Los resultados y los límites están en [docs/calibracion.md](docs/calibracion.md).
+Se calibró con 9 informes de un curso de negocios: ajusta los falsos positivos de los informes (índices, títulos en mayúsculas, "costos asociados a") y detecta negritas con dos puntos (§19) y frases sobre el propio informe (§25). También se midió con 6 textos humanos de 2010, como control de falsos positivos. Los resultados y los límites están en [docs/calibracion.md](docs/calibracion.md).
 
 ## Cómo funciona
 

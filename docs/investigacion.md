@@ -87,6 +87,7 @@ Algunas señales no necesitan estudio porque contradicen la norma: la IA calca e
 | Norma RAE o FundéuRAE | 8, 11, 15, 20, 21, 27 | La forma de IA contradice la norma o el uso recomendado |
 | Listas de frases | 4, 10, 12, 16, 18, 22 | Listas de detectores y prensa, sin método publicado |
 | Informes reales (1.1.0) | 12, 14, 15, 19, 25 | Frecuencias medidas en 9 informes de un curso; ver [calibracion.md](calibracion.md) |
+| Textos humanos de 2010 (1.3.0) | 8, 9, 15, 16, 18, 21, 27 | Marcas en 6 textos anteriores a la IA, usados como control de falsos positivos; ver [calibracion.md](calibracion.md) |
 
 ## Modo presentación (1.2.0)
 

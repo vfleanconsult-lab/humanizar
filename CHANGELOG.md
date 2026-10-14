@@ -1,5 +1,13 @@
 # Historial de cambios
 
+## 1.3.0
+
+- Calibración con 6 textos humanos de 2010 (10.909 palabras), usados como control: toda marca es un falso positivo. Resultados agregados en `docs/calibracion.md`.
+- `scripts/marcar.py` junta los saltos de línea de los PDF, quita espacios dobles y pega palabras cortadas por guion antes de buscar. En un .pptx no junta líneas, porque cada viñeta es una línea.
+- `scripts/marcar.py`: el guion y la semiraya en §8 cuentan con 2 marcas por párrafo; "de alguna manera" en §9 también; sale "imperdible" de §16, "cuenta con" de §18 y los meses con mayúscula de §21; "eventualmente" en §27 solo al abrir una oración; la coma antes de "y" en §21 solo en series; "incluyendo", "dependiendo", "hablando", "siendo" y similares no cuentan como gerundio colgado en §15.
+- `SKILL.md`: §9, §15, §21 y §27 aclaran qué es habitual en textos humanos; §15 dice que es el patrón con más falsos positivos. Salen "imperdible" de §16 y "cuenta con" y "dispone de" de §18.
+- `docs/investigacion.md` suma el respaldo de la muestra de 2010.
+
 ## 1.2.0
 
 - Modo presentación en `SKILL.md`: revisa lámina por lámina, trata como prosa los párrafos y las notas del orador, no aplica §2, §11, §19 ni §25 a viñetas cortas ni a la lámina de agenda, pide títulos que digan la conclusión, no alarga el texto y entrega una tabla por lámina.
