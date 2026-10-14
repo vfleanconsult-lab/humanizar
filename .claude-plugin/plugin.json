@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "humanizar",
+  "description": "Reescribe textos en español que suenan a IA para que suenen a quien los firma, sin cambiar lo que dicen.",
+  "version": "1.0.0",
+  "author": {
+    "name": "vfleanconsult-lab",
+    "url": "https://github.com/vfleanconsult-lab"
+  },
+  "homepage": "https://github.com/vfleanconsult-lab/humanizar",
+  "repository": "https://github.com/vfleanconsult-lab/humanizar",
+  "license": "MIT",
+  "keywords": ["escritura", "edición", "humanizar", "español", "estilo"],
+  "skills": ["./"]
+}

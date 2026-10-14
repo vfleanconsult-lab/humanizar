@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizar"
+  short_description: "Que el texto de IA en español suene a quien lo firma"
+  default_prompt: "Usa $humanizar para reescribir este texto con mi voz sin cambiar sus datos."
