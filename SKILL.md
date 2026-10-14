@@ -9,7 +9,7 @@ description: |
   estudios de corpus sobre textos de IA en español.
 license: MIT
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # Humanizar: quitar los patrones de escritura de IA en español
@@ -339,12 +339,10 @@ El modelo escribe para un lector sin contexto, porque eso sirve para más casos.
 
 ## G. Español de traducción
 
-Los modelos aprenden sobre todo de textos en inglés, y en español escriben correcto pero calcado.
-
 ### 27. Calcos del inglés
 
-**Busca:** jugar un rol, tomar lugar, hacer sentido, en base a, a nivel de (por "en cuanto a"), en orden a, aplicar a (un cargo), remover (por "quitar"), asumir (por "suponer"), eventualmente al abrir una oración (por "finalmente"), evidencia (por "pruebas"), masivo (por "enorme"), rol en todo, posesivos innecesarios ("levantó su mano", "revisa tu correo y tu contraseña"), cadenas de adverbios en -mente, el uso de "uno" como sujeto genérico
-**Problema:** Son estructuras del inglés traducidas palabra por palabra. Cada una sola puede ser un hábito humano, porque mucha gente también calca; varias juntas indican un texto pensado en inglés. Usa la forma propia del español y de la variedad del escritor.
+**Busca:** jugar un rol, tomar lugar, hacer sentido, en base a, a nivel de (por "en cuanto a"), en orden a, aplicar a (un cargo), remover (por "quitar"), asumir (por "suponer"), eventualmente al abrir una oración (por "finalmente"), evidencia (por "pruebas"), masivo (por "enorme"), tremendo, ejemplo estelar, embarcarse en una misión, demuestra consistentemente, en post de (por "en pos de"), rol en todo, posesivos innecesarios ("levantó su mano", "revisa tu correo y tu contraseña"), cadenas de adverbios en -mente, el uso de "uno" como sujeto genérico
+**Problema:** Son estructuras del inglés traducidas palabra por palabra. Una sola puede ser hábito humano; varias juntas indican un texto pensado en inglés. Usa la forma propia del español y de la variedad del escritor.
 **Antes:**
 > A nivel de costos, el área de finanzas juega un rol clave en base a los datos, y eventualmente esto hace sentido para el directorio.
 **Después:**

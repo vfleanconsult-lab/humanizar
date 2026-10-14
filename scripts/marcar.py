@@ -8,7 +8,8 @@ Uso:
 
 Solo busca las señales que se pueden detectar con palabras y puntuación.
 Las de estructura (§2, §6, §26 y otras) necesitan la skill completa.
-Una marca no prueba que el texto sea de IA: lo que pesa es la densidad.
+Es una guía de edición, no un detector de autoría: una marca no prueba que el texto
+sea de IA, y un texto escrito pidiendo "sin señales de IA" puede dar densidad baja.
 """
 
 from __future__ import annotations
@@ -73,7 +74,10 @@ PATRONES: list[tuple] = [
         r"\bno (?:es|son|se trata de)(?: solo| solamente| simplemente| únicamente)? [^.;:\n]{1,60}?[,;] (?:es|son|sino)\b"
         r"|\bno solo [^.;\n]{1,60}?,? sino(?: también)?\b"
         r"|\bmás que (?:un|una) [^.;\n]{1,40}?, (?:es|son)\b"
-        r"|\blejos de ser\b", I)),
+        r"|\blejos de ser\b"
+        r"|\bno (?:es|son|era|eran)(?: solo| solamente| simplemente| únicamente)? [^.;:\n]{1,60}\.\s+(?:Es|Son|Era|Eran)\b"
+        r"|\bno (?:significa|implica|quiere decir)\b[^.;:\n]{1,60}\.\s+(?:Significa|Implica|Quiere decir)\b"
+        r"|\bno como [^.;\n]{1,60}?, sino\b", I)),
     (3, "Frases que suenan profundas", re.compile(
         r"\b(?:la verdadera pregunta es|en el fondo|en esencia|lo que realmente importa"
         r"|el corazón del asunto|la clave está en|es el ADN de|es el lenguaje de)\b", I)),
@@ -144,7 +148,9 @@ PATRONES: list[tuple] = [
         r"|\bla siguiente tabla\b|\bse organiza en \w+ (?:secciones|capítulos|partes)\b", I)),
     (27, "Calcos del inglés", re.compile(
         r"\b(?:juega(?:n)? un rol|jugar un rol|tomar lugar|tomó lugar|hace sentido|hacer sentido|en base a"
-        r"|a nivel de|en orden a)\b|(?:^|[.!?] )Eventualmente,", I)),
+        r"|a nivel de|en orden a|en post de|ejemplo estelar|mejoras? tremendas?"
+        r"|(?:se )?embarc(?:ó|aron|ar) en una misión|demuestra consistentemente)\b"
+        r"|(?:^|[.!?] )Eventualmente,", I)),
 ]
 
 

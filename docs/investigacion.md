@@ -67,6 +67,8 @@ En 1.1.0 medí el detector con 9 informes de un curso de negocios. El resultado 
 
 Es un solo curso y un solo semestre, así que sirve para ajustar el detector, no para fijar umbrales.
 
+En 1.4.0 probé `marcar.py` con 4 artículos de un sitio web cuyo autor confirmó que los generó una IA, algunos con la instrucción de evitar señales de IA, y uno propio o mixto. La densidad (de 0,1 a 1,5 marcas por cada 100 palabras antes de los ajustes) cayó dentro del rango de los informes humanos, así que no separa texto de IA de texto humano. Los ajustes salen de lo que el detector no veía: el contraste "no es X. Es Y" partido en dos oraciones (§1) y calcos como "mejoras tremendas", "ejemplo estelar" y "en post de" (§27). Es una muestra de 4 textos, no una calibración.
+
 ## Normas del español usadas
 
 Algunas señales no necesitan estudio porque contradicen la norma: la IA calca el inglés y la norma dice otra cosa.

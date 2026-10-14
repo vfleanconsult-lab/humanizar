@@ -108,9 +108,11 @@ Revisa esta presentación. No cambies cifras ni gráficos.
 [adjunta el .pptx]
 ```
 
-## Detector rápido
+## Guía de edición rápida
 
-`scripts/marcar.py` marca las señales que se pueden encontrar con palabras y puntuación. No reemplaza la skill: las señales de estructura necesitan leer el texto completo.
+`scripts/marcar.py` marca las frases que conviene reescribir: las señales que se pueden encontrar con palabras y puntuación. No reemplaza la skill: las señales de estructura necesitan leer el texto completo.
+
+**No es un detector de autoría.** Una densidad alta indica que el texto necesita edición, no que lo escribió una IA, y una densidad baja no prueba que lo escribió una persona. Un texto generado con la instrucción "escribe sin señales de IA" puede pasar con pocas marcas, y un texto humano traducido o con plantilla de LinkedIn puede tener varias. No lo uses para acusar a nadie.
 
 ```bash
 python3 scripts/marcar.py mi-texto.txt
