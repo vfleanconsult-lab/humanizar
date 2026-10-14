@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## 1.4.0
+
+- `scripts/marcar.py`: §1 detecta el contraste partido en dos oraciones ("no es X. Es Y", "no significa X. Significa Y") y "no como X, sino". §27 suma "en post de", "ejemplo estelar", "un gran ejemplo de", "mejoras tremendas", "se embarcó en una misión" y "demuestra consistentemente". No se recalibró con los textos humanos de 2010.
+- `SKILL.md`: §27 lista los mismos calcos.
+- `README.md` y `scripts/marcar.py`: aclaran que el script es una guía de edición y no un detector de autoría. Con 4 artículos generados con IA, la densidad cayó dentro del rango de los informes humanos. Detalle en `docs/investigacion.md`.
+
 ## 1.3.0
 
 - `README.md`: la instalación en Claude Desktop explica cómo armar un ZIP sin los manifiestos de plugin, que Desktop rechaza.
