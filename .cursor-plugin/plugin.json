@@ -1,7 +1,7 @@
 {
   "name": "humanizar",
   "description": "Reescribe textos en español que suenan a IA para que suenen a quien los firma, sin cambiar lo que dicen.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": {
     "name": "vfleanconsult-lab"
   },

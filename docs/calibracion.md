@@ -97,6 +97,46 @@ Fallas encontradas y qué se corrigió:
 2. **Dos cambios de sentido que el conteo no ve.** "esenciales para la dieta" pasó a "parte de la dieta", y "firmas emergentes que buscamos" pasó a "todas buscamos". Los encontré al releer. El paso 3 de `SKILL.md` ahora pide revisar grados y cuantificadores.
 3. **Datos del informe.** No hubo cifras ni siglas cambiadas. El modo archivo ahora lista cifras, fórmulas, tablas, índices, bibliografía, siglas y términos del ramo entre lo que no se toca.
 
+## Segunda muestra: textos humanos de 2010
+
+Los informes de arriba tienen un problema: no sé con certeza que ninguno tenga ayuda de IA. Esta muestra es un control limpio. Son 6 textos de un curso de gestión de procesos escritos en 2010 (apuntes de clase, un caso y lecturas), 12 años antes de ChatGPT. Todo lo que el detector marca ahí es un falso positivo.
+
+- 6 PDF convertidos con `markitdown`: 10.909 palabras después de limpiar el texto.
+- Mezcla de autores y registros: apuntes de un profesor que habla de usted al lector, un caso de empresa y lecturas técnicas de una consultora.
+- Este repositorio es público. Aquí hay solo cifras y frases cortas.
+
+Resultado con el detector de la versión 1.1.0 y con el de la 1.3.0, sobre el mismo texto limpio:
+
+| § | Patrón | 1.1.0 | 1.2.0 | Qué eran |
+|---|--------|-------|-------|----------|
+| 1 | No es X, es Y | 1 | 1 | Un contraste real y bien usado ("no es el marco, son los planos") |
+| 8 | Rayas como conector | 4 | 2 | Incisos con guion o semiraya, hábito de Word |
+| 9 | Calificadores apilados | 1 | 0 | "de alguna manera" suelto |
+| 10 | Conectores de plantilla | 3 | 3 | Un "Asimismo", un "En resumen", un "Cabe señalar" |
+| 14 | Relación vaga | 1 | 1 | "asociados a" |
+| 15 | Gerundios colgados | 18 | 14 | Ver abajo |
+| 16 | Lenguaje publicitario | 1 | 0 | "imperdible" en una frase de viaje |
+| 18 | Evitar ser y tener | 2 | 0 | "cuenta con todos los permisos" |
+| 21 | Ortotipografía a la inglesa | 5 | 4 | Coma antes de "y" en series, de un autor |
+| 27 | Calcos del inglés | 1 | 0 | "eventualmente" en su sentido correcto ("si llega el caso") |
+| | Total por 100 palabras | 0,34 | 0,23 | Por texto, de 0,09 a 0,51 |
+
+Qué encontré:
+
+1. **El PDF escondía y creaba marcas.** El texto sale con saltos de línea dentro de cada párrafo y, a veces, con espacios dobles y palabras cortadas por guion. Con eso el detector perdía frases que cruzan un salto y marcaba como "coma antes de y" cualquier línea que terminara en ", y algo". `marcar.py` ahora junta las líneas, quita los espacios dobles y pega las palabras cortadas antes de buscar.
+2. **§15 sigue siendo la señal con más falsos positivos.** Salió 1 vez cada 780 palabras en textos de 2010 (14 marcas). Casi todas son gerundios que dicen cómo se hizo algo, pero hay tres de consecuencia o de tiempo posterior ("..., incrementando la complejidad", "durante 14 años, produciendo..."), que es el uso que la RAE desaconseja. Una persona los escribe igual. `SKILL.md` ahora lo dice. El detector ya no cuenta "incluyendo", "dependiendo", "hablando", "siendo", "teniendo" y similares.
+3. **"cuenta con", "imperdible", "de alguna manera" y "eventualmente" son español corriente.** Salen de la lista o pasan a contar solo si se juntan.
+4. **Meses con mayúscula no son señal de IA.** Aparecen 4 veces en los textos de 2010 ("de Mayo", "de Enero"). Es una falta humana. `SKILL.md` sigue mandando corregirla, pero el detector ya no la cuenta como señal.
+5. **Lo que no cambió.** §1, §10 y §14 tienen 1 a 3 marcas reales de la prosa humana. Un "Asimismo" suelto no dice nada. El detector funciona bien cuando se mira la densidad y no una marca.
+
+Efecto de los cambios en la sensibilidad: sobre los ejemplos "Antes" de `SKILL.md`, el detector bajó de 62 a 56 marcas y sigue encontrando los mismos 21 patrones.
+
+Límites de esta muestra:
+
+- Son 11.000 palabras de pocos autores, en español de Chile y de un solo tema. Sirve para encontrar falsos positivos, no para decir cuánto escribe una IA.
+- No tengo una muestra de texto de IA del mismo tipo con la que medir cuánto se separan las dos densidades. Lo que falta es medir eso.
+- El ajuste de §9, §16, §18 y §27 se apoya en una o dos apariciones cada uno. Son palabras de uso común en español, así que lo tomo como seguro, pero sin muchas más pruebas que esa.
+
 ## Límites
 
 - La prueba de humanización la hizo el mismo modelo que corrigió las instrucciones, y nadie la revisó a ciegas.

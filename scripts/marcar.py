@@ -49,8 +49,21 @@ def pregunta_con_apertura(texto: str, marca: re.Match[str]) -> bool:
     return "¿" in texto[inicio:marca.start()]
 
 # Palabras que una persona usa sin problema; son señal solo si se juntan.
-# {número de patrón: marcas mínimas en un mismo párrafo}
-MINIMO_POR_PARRAFO = {12: 3}
+# {nombre del patrón: marcas mínimas en un mismo párrafo}
+MINIMO_POR_PARRAFO = {
+    "Rayas como conector (guion o semiraya)": 2,
+    "Calificadores apilados": 2,
+    "Palabras sobreusadas": 3,
+}
+
+# Gerundios de uso corriente en textos formales; no cuentan como colgados.
+GERUNDIO_CORRIENTE = re.compile(
+    r"^, (?:incluyendo|dependiendo|hablando|siendo|teniendo|habiendo|considerando|suponiendo"
+    r"|estando|tratando|entendiendo|pensando)\b", I)
+
+
+def gerundio_corriente(texto: str, marca: re.Match[str]) -> bool:
+    return bool(GERUNDIO_CORRIENTE.match(marca.group(0)))
 
 # Líneas de índice automático de Word: "[1. Introducción 3](#_Toc123)".
 INDICE = re.compile(r"^.*\]\(#[^)]*\).*$", re.M)
@@ -71,9 +84,10 @@ PATRONES: list[tuple] = [
     (5, "Discutir con nadie", re.compile(
         r"\b(?:no digo que|que quede claro|no me malinterpreten|no me malinterpretes"
         r"|podría pensarse que|sería tentador|uno podría caer en la tentación)\b", I)),
-    (8, "Rayas como conector", re.compile(
-        r" — |\w—\w|(?<=[a-záéíóúñ,;)]) [–-] (?=[a-záéíóúñ¿¡(])"
-        r"| -[a-záéíóúñ][^-\n]{2,60}[a-záéíóúñ]- "), en_titulo),
+    (8, "Rayas como conector", re.compile(r" — |\w—\w"), en_titulo),
+    (8, "Rayas como conector (guion o semiraya)", re.compile(
+        r"(?<=[a-záéíóúñ,;)]) [–-] (?=[a-záéíóúñ¿¡(])"
+        r"| [–-][a-záéíóúñ][^-–\n]{2,60}[a-záéíóúñ][–-] "), en_titulo),
     (9, "Calificadores apilados", re.compile(
         r"\b(?:podría eventualmente|quizás podría|en cierta medida|hasta cierto punto|de alguna manera)\b", I)),
     (10, "Conectores de plantilla", re.compile(
@@ -99,16 +113,16 @@ PATRONES: list[tuple] = [
         r"|en el marco (?:de|del)(?! (?:la |el )?(?:asignatura|evaluaci|ramo|taller|curso|simula"
         r"|actividad|módulo|unidad|programa)))\b", I), tras_negocio),
     (15, "Gerundio colgado", re.compile(
-        r", (?!cuando\b)(?:\w+(?:ando|iendo|yendo)(?:se|la|lo|las|los)?|convirtiéndose|consolidándose|posicionándose)\b(?! que)", I)),
+        r", (?!cuando\b)(?:\w+(?:ando|iendo|yendo)(?:se|la|lo|las|los)?|convirtiéndose|consolidándose|posicionándose)\b(?! que)", I), gerundio_corriente),
     (16, "Lenguaje publicitario", re.compile(
         r"\b(?:enclavad[oa]|en el corazón de|rica herencia|rico patrimonio|belleza natural|de ensueño"
-        r"|imperdible|joya escondida|experiencia única|compromiso con la excelencia|de clase mundial"
+        r"|joya escondida|experiencia única|compromiso con la excelencia|de clase mundial"
         r"|de vanguardia)\b", I)),
     (17, "Autoridad prestada", re.compile(
         r"\b(?:los expertos (?:coinciden|advierten|señalan|afirman)|los especialistas (?:coinciden|advierten)"
         r"|diversos estudios|numerosas investigaciones|numerosos estudios|según analistas)\b", I)),
     (18, "Evitar ser y tener", re.compile(
-        r"\b(?:se erige como|se posiciona como|se consolida como|funge como|cuenta con|ostenta|alberga)\b", I)),
+        r"\b(?:se erige como|se posiciona como|se consolida como|funge como|ostenta|alberga)\b", I)),
     (19, "Negritas decorativas", re.compile(
         r"(?m)^[ \t]*(?:[-*•][ \t]+)?\*\*[^*\n]{2,70}:\*\*[ \t]+(?:\S+[ \t]+){5,}\S+")),
     (20, "Mayúscula en cada palabra del título", re.compile(
@@ -116,9 +130,7 @@ PATRONES: list[tuple] = [
         r"(?: (?:(?:de|del|la|las|el|los|y|e|en|para|por|con|a|al|o|u) )*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){2,}")),
     (21, "Ortotipografía a la inglesa", re.compile(
         r"(?<![¿\w])\b[A-ZÁÉÍÓÚÑ][^¿?.!\n]{2,80}\?"
-        r"|\b(?:Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) \d"
-        r"|\bde (?:Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)\b"
-        r"|, y \w+[.\n]"), pregunta_con_apertura),
+        r"|\b\w+, \w+(?: \w+){0,2}, y (?:\w+ )?\w+"), pregunta_con_apertura),
     (22, "Restos del chatbot", re.compile(
         r"¡(?:Claro|Por supuesto|Excelente pregunta|Qué buena pregunta)!|\b(?:Espero que (?:esto )?te sea útil"
         r"|Espero haberte ayudado|No dudes en|¿Quieres que|¿Te gustaría que|A continuación te presento"
@@ -132,7 +144,7 @@ PATRONES: list[tuple] = [
         r"|\bla siguiente tabla\b|\bse organiza en \w+ (?:secciones|capítulos|partes)\b", I)),
     (27, "Calcos del inglés", re.compile(
         r"\b(?:juega(?:n)? un rol|jugar un rol|tomar lugar|tomó lugar|hace sentido|hacer sentido|en base a"
-        r"|a nivel de|en orden a|eventualmente)\b", I)),
+        r"|a nivel de|en orden a)\b|(?:^|[.!?] )Eventualmente,", I)),
 ]
 
 
@@ -203,8 +215,21 @@ def leer_pptx(ruta: Path) -> list[tuple[int, str]]:
         return laminas
 
 
-def marcar(texto: str) -> list[tuple[int, str, list[str]]]:
+def normalizar(texto: str, unir_lineas: bool = True) -> str:
+    """Quita índices de Word y arregla lo que deja un PDF: espacios dobles y saltos de línea dentro del párrafo.
+
+    En una presentación cada viñeta es una línea; ahí no se unen (unir_lineas=False).
+    """
     texto = INDICE.sub("", texto)
+    texto = re.sub(r"[ \t]{2,}", " ", texto)
+    if not unir_lineas:
+        return texto
+    texto = re.sub(r"(?<=[a-záéíóúñ])-\n(?=[a-záéíóúñ])", "", texto)
+    return re.sub(r"(?<=\S)\n(?=[a-záéíóúñ(¿¡])", " ", texto)
+
+
+def marcar(texto: str, unir_lineas: bool = True) -> list[tuple[int, str, list[str]]]:
+    texto = normalizar(texto, unir_lineas)
     resultados = []
     for numero, nombre, patron, *descartar in PATRONES:
         hallazgos = []
@@ -212,7 +237,7 @@ def marcar(texto: str) -> list[tuple[int, str, list[str]]]:
             if descartar and descartar[0](texto, m):
                 continue
             hallazgos.append(m.group(0).strip())
-        minimo = MINIMO_POR_PARRAFO.get(numero)
+        minimo = MINIMO_POR_PARRAFO.get(nombre)
         if minimo:
             hallazgos = [h for parrafo in re.split(r"\n\s*\n", texto)
                          if len(grupo := [m.group(0).strip() for m in patron.finditer(parrafo)]) >= minimo
@@ -233,9 +258,9 @@ def main() -> None:
     if ruta and ruta.suffix.lower() == ".pptx":
         laminas = leer_pptx(ruta)
         texto = "\n\n".join(t for _, t in laminas)
-        resultados = marcar(texto)
+        resultados = marcar(texto, unir_lineas=False)
         for numero, texto_lamina in laminas:
-            if lamina := marcar(texto_lamina):
+            if lamina := marcar(texto_lamina, unir_lineas=False):
                 print(f"Lámina {numero}")
                 informar(lamina, "  ")
         if resultados:

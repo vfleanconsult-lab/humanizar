@@ -9,7 +9,7 @@ description: |
   estudios de corpus sobre textos de IA en español.
 license: MIT
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Humanizar: quitar los patrones de escritura de IA en español
@@ -153,7 +153,7 @@ Formas y puntuación aplicadas en todas partes, lo pida o no el sentido.
 ### 9. Calificadores apilados
 
 **Busca:** podría eventualmente, quizás podría, en cierta medida, de alguna manera, hasta cierto punto, en algunos casos podría
-**Problema:** Cada revisión suma un calificador hasta que todo suena dudoso, casi siempre para corregir una exageración anterior y no por una duda real. Deja un calificador solo cuando la fuente lo respalda y el sentido lo necesita. "Quizás" o "suele" son hábitos humanos. *Débil sola.*
+**Problema:** Cada revisión suma un calificador hasta que todo suena dudoso, casi siempre para corregir una exageración anterior y no por una duda real. Deja un calificador solo cuando la fuente lo respalda y el sentido lo necesita. "Quizás", "suele" y un "de alguna manera" suelto son hábitos humanos. *Débil sola.*
 **Antes:**
 > Podría eventualmente argumentarse que la medida, en cierta medida, quizás tenga algún efecto.
 **Después:**
@@ -215,7 +215,7 @@ El hecho de fondo suele ser correcto. Consérvalo y quita el disfraz.
 ### 15. Gerundios colgados
 
 **Busca:** una oración que termina en coma más gerundio: destacando, reflejando, consolidándose, convirtiéndose en, posicionándose como, contribuyendo a, fomentando, garantizando, asegurando, manteniendo, priorizando, permitiendo, generando, demostrando
-**Problema:** El gerundio se pega al final de un hecho simple para que suene profundo, y muchas veces expresa algo posterior al verbo principal ("Se fundó en 1990, convirtiéndose luego en líder"), uso que la RAE considera incorrecto. Es una de las señales más frecuentes del español de IA. Conserva el hecho; convierte el gerundio en una oración con verbo conjugado o quítalo si la fuente no lo respalda. Un gerundio que dice cómo se hizo algo ("redactando la misión") es normal; el colgado agrega un valor o una consecuencia ("generando una severa pérdida").
+**Problema:** El gerundio se pega al final de un hecho simple para que suene profundo, y muchas veces expresa algo posterior al verbo principal ("Se fundó en 1990, convirtiéndose luego en líder"), uso que la RAE considera incorrecto. Es frecuente en el español de IA, pero también en textos humanos formales: una marca suelta no basta. Conserva el hecho; convierte el gerundio en una oración con verbo conjugado o quítalo si la fuente no lo respalda. Un gerundio que dice cómo se hizo algo ("redactando la misión") es normal; el colgado agrega un valor o una consecuencia ("generando una severa pérdida").
 **Antes:**
 > La empresa se fundó en 2010, convirtiéndose en líder del sector y reflejando el compromiso de sus socios, contribuyendo al desarrollo de la región.
 **Después:**
@@ -223,7 +223,7 @@ El hecho de fondo suele ser correcto. Consérvalo y quita el disfraz.
 
 ### 16. Lenguaje publicitario
 
-**Busca:** enclavado en, ubicado en el corazón de, rica herencia, rico patrimonio, belleza natural, impresionante, imponente, de ensueño, imperdible, una joya escondida, una experiencia única, compromiso con la excelencia, de clase mundial, de vanguardia, referente
+**Busca:** enclavado en, ubicado en el corazón de, rica herencia, rico patrimonio, belleza natural, impresionante, imponente, de ensueño, una joya escondida, una experiencia única, compromiso con la excelencia, de clase mundial, de vanguardia, referente
 **Problema:** El texto suena a folleto, sobre todo al hablar de lugares, productos u organizaciones. Di qué es la cosa.
 **Antes:**
 > Enclavada en el corazón del valle de Colchagua, la viña, fundada en 1920, es una joya escondida con una rica herencia y paisajes de ensueño.
@@ -241,7 +241,7 @@ El hecho de fondo suele ser correcto. Consérvalo y quita el disfraz.
 
 ### 18. Evitar ser, estar y tener
 
-**Busca:** se erige como, se posiciona como, se consolida como, funge como, actúa como, representa [un], constituye [un], cuenta con, ostenta, alberga, posee, dispone de
+**Busca:** se erige como, se posiciona como, se consolida como, funge como, actúa como, representa [un], constituye [un], ostenta, alberga, posee
 **Problema:** Verbos simples reemplazados por frases más largas. Usa ser, estar y tener.
 **Antes:**
 > La galería se erige como el principal espacio de arte de la ciudad y cuenta con cuatro salas que albergan más de 300 obras.
@@ -273,7 +273,7 @@ Las plantillas también producen formato limpio. La señal es la decoración en 
 ### 21. Ortotipografía a la inglesa
 
 **Busca:** signos de apertura ausentes (Qué opinas?); coma antes de "y" en una serie ("ventas, costos, y gastos"); punto dentro de las comillas de cierre ("dijo "listo.""); separador decimal o de miles distinto al del país del escritor; porcentaje pegado (20%) cuando el texto separa en otras partes; fechas en orden mes/día; meses y días con mayúscula ("el Lunes 3 de Marzo")
-**Problema:** Son reglas del inglés aplicadas al español. Corrige según la norma y según el uso del escritor. Si el texto mezcla formatos, usa el que predomine o el de la muestra. Las comillas curvas o rectas por sí solas no son señal, porque los editores las cambian solos. *Débil sola*, salvo los signos de apertura ausentes y los meses con mayúscula, que bastan para editar.
+**Problema:** Son reglas del inglés aplicadas al español. Corrige según la norma y según el uso del escritor. Si el texto mezcla formatos, usa el que predomine o el de la muestra. Las comillas curvas o rectas por sí solas no son señal, porque los editores las cambian solos. *Débil sola*, salvo los signos de apertura ausentes, que bastan para editar. Los meses con mayúscula y la coma antes de "y" se corrigen, pero no indican IA.
 **Antes:**
 > El Lunes 3 de Marzo revisamos ventas, costos, y gastos. Qué encontramos? Un margen de 12.5%.
 **Después:**
@@ -343,7 +343,7 @@ Los modelos aprenden sobre todo de textos en inglés, y en español escriben cor
 
 ### 27. Calcos del inglés
 
-**Busca:** jugar un rol, tomar lugar, hacer sentido, en base a, a nivel de (por "en cuanto a"), en orden a, aplicar a (un cargo), remover (por "quitar"), asumir (por "suponer"), eventualmente (por "finalmente"), evidencia (por "pruebas"), masivo (por "enorme"), rol en todo, posesivos innecesarios ("levantó su mano", "revisa tu correo y tu contraseña"), cadenas de adverbios en -mente, el uso de "uno" como sujeto genérico
+**Busca:** jugar un rol, tomar lugar, hacer sentido, en base a, a nivel de (por "en cuanto a"), en orden a, aplicar a (un cargo), remover (por "quitar"), asumir (por "suponer"), eventualmente al abrir una oración (por "finalmente"), evidencia (por "pruebas"), masivo (por "enorme"), rol en todo, posesivos innecesarios ("levantó su mano", "revisa tu correo y tu contraseña"), cadenas de adverbios en -mente, el uso de "uno" como sujeto genérico
 **Problema:** Son estructuras del inglés traducidas palabra por palabra. Cada una sola puede ser un hábito humano, porque mucha gente también calca; varias juntas indican un texto pensado en inglés. Usa la forma propia del español y de la variedad del escritor.
 **Antes:**
 > A nivel de costos, el área de finanzas juega un rol clave en base a los datos, y eventualmente esto hace sentido para el directorio.
