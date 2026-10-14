@@ -88,6 +88,10 @@ Algunas señales no necesitan estudio porque contradicen la norma: la IA calca e
 | Listas de frases | 4, 10, 12, 16, 18, 22 | Listas de detectores y prensa, sin método publicado |
 | Informes reales (1.1.0) | 12, 14, 15, 19, 25 | Frecuencias medidas en 9 informes de un curso; ver [calibracion.md](calibracion.md) |
 
+## Modo presentación (1.2.0)
+
+El modo presentación no agrega patrones; ajusta dónde se aplican. Las viñetas y las frases sin verbo son el formato normal de una lámina, así que ahí no cuentan como señal. La regla de títulos que dicen la conclusión viene de la práctica de consultoría (títulos de acción o "action titles"), no de un estudio sobre IA: un título-tema como "Análisis de clientes" es la elección por defecto que sirve para cualquier lámina. Falta calibrarlo con presentaciones reales, como se hizo con los informes.
+
 ## Diferencias con la skill en inglés
 
 | Inglés (humanizer 3.1.0) | Español (humanizar 1.1.0) | Motivo |

@@ -1,5 +1,10 @@
 # Historial de cambios
 
+## 1.2.0
+
+- Modo presentación en `SKILL.md`: revisa lámina por lámina, trata como prosa los párrafos y las notas del orador, no aplica §2, §11, §19 ni §25 a viñetas cortas ni a la lámina de agenda, pide títulos que digan la conclusión, no alarga el texto y entrega una tabla por lámina.
+- `scripts/marcar.py` lee archivos .pptx sin dependencias externas: respeta el orden de las láminas, incluye las notas del orador, revisa los títulos con §20 e informa las señales por lámina.
+
 ## 1.1.0
 
 - Calibración con 9 informes de un curso de negocios. Resultados agregados en `docs/calibracion.md`.

@@ -5,11 +5,11 @@ description: |
   Úsala al editar o revisar prosa en español con señales de IA: "no es X, es Y", remates de una línea,
   preámbulos, tríadas y pares forzados, conectores de plantilla, gerundios colgados, palabras infladas,
   lenguaje publicitario, títulos con mayúscula en cada palabra, negritas decorativas, calcos del inglés
-  o español neutro sin lugar. Adapta al español la guía "Signs of AI writing" de Wikipedia y los
+  o español neutro sin lugar. También revisa informes y presentaciones (.pptx) lámina por lámina. Adapta al español la guía "Signs of AI writing" de Wikipedia y los
   estudios de corpus sobre textos de IA en español.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Humanizar: quitar los patrones de escritura de IA en español
@@ -54,6 +54,17 @@ Sin muestra, toma la voz del tipo de texto. Blogs, ensayos, columnas y escritos 
 **Texto pegado (por defecto).** Entrega el borrador, una lista breve de los patrones que quedan y la versión final.
 
 **Modo archivo.** Cuando el usuario indique un archivo, haz el proceso completo pero escribe solo la versión final en el archivo. Cambia solo la prosa. No toques bloques de código, código en línea, comandos, rutas, metadatos YAML, datos, destinos de enlaces, cifras, fórmulas, tablas, índices, bibliografía, siglas ni términos técnicos del ramo (CUV, ROA, B2B). Después da un resumen breve.
+
+**Modo presentación.** Para un .pptx o texto copiado de láminas, trabaja lámina por lámina.
+
+- Los párrafos con oraciones completas y las notas del orador son prosa: aplica todos los patrones.
+- Las viñetas cortas, las frases sin verbo, las etiquetas con dos puntos y la lámina de agenda son normales en una lámina. No apliques ahí §2, §11, §19 ni §25.
+- El título de una lámina con hallazgos debe decir la conclusión ("Dos clientes concentran el 60 % de las ventas") y no solo el tema ("Análisis de clientes"), usando solo datos de la lámina. Aplica §20 a todos los títulos.
+- El texto nuevo no puede ser más largo que el original, para que quepa en su cuadro.
+- No toques cifras, gráficos, tablas ni nombres. "¿Preguntas?" y "Gracias" de cierre son convenciones; déjalas.
+- Si una lámina de conclusiones solo repite las anteriores, propón cortarla, pero no la borres.
+
+Entrega una tabla por lámina con el texto original, las señales y la propuesta. Edita el archivo solo si el usuario lo pide, y conserva el formato.
 
 **Modo integrado.** Cuando otra tarea use esta skill para un correo, un informe o un documento, entrega solo el texto final.
 
