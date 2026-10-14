@@ -106,6 +106,8 @@ python3 scripts/marcar.py mi-texto.txt
 23 señales en 105 palabras: 21.9 por cada 100 palabras.
 ```
 
+Se calibró con 9 informes de un curso de negocios: ajusta los falsos positivos de los informes (índices, títulos en mayúsculas, "costos asociados a") y detecta negritas con dos puntos (§19) y frases sobre el propio informe (§25). Los resultados y los límites están en [docs/calibracion.md](docs/calibracion.md).
+
 ## Cómo funciona
 
 Un modelo de lenguaje escribe lo más probable a continuación, así que elige lo que sirve para la mayor cantidad de lectores y temas. Una persona escribe para un lector y un tema. Cada señal es una forma de esa elección por defecto: una oración que anuncia importancia en vez de dar un dato, ritmo o formato aplicado por regla, un hecho común presentado como hito, restos del chat, o un español calcado del inglés.

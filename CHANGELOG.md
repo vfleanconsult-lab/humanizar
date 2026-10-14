@@ -1,5 +1,14 @@
 # Historial de cambios
 
+## 1.1.0
+
+- Calibración con 9 informes de un curso de negocios. Resultados agregados en `docs/calibracion.md`.
+- `scripts/marcar.py` ignora índices de Word y líneas de título en §8, exige 3 marcas por párrafo en §12, deja pasar "costos asociados a" y "en el marco de la asignatura" en §14, ya no marca "cuando" en §15 ni títulos en mayúsculas sostenidas en §20, y no cuenta como falta de ¿ la pregunta que la lleva antes de una abreviatura (§21).
+- `scripts/marcar.py` detecta ahora §19 (negritas con dos puntos) y §25 (frases sobre el propio informe).
+- `SKILL.md`: §25 suma "el presente informe analiza..." y conserva el objetivo que exige una pauta; §15 suma "asegurando", "manteniendo" y "priorizando" y distingue el gerundio de modo; §12 y §14 aclaran el lenguaje de negocios.
+- `SKILL.md`: el paso 3 pide revisar que no cambie un grado ni un cuantificador, y el modo archivo no toca cifras, fórmulas, tablas, índices, bibliografía, siglas ni términos del ramo.
+- `docs/investigacion.md` suma el respaldo de los informes reales.
+
 ## 1.0.0
 
 - Primera versión en español, adaptada de humanizer 3.1.0.

@@ -6,7 +6,7 @@ Uso:
     pbpaste | python3 scripts/marcar.py
 
 Solo busca las señales que se pueden detectar con palabras y puntuación.
-Las de estructura (§2, §5, §26 y otras) necesitan la skill completa.
+Las de estructura (§2, §6, §26 y otras) necesitan la skill completa.
 Una marca no prueba que el texto sea de IA: lo que pesa es la densidad.
 """
 
@@ -16,11 +16,43 @@ import re
 import sys
 from pathlib import Path
 
-# Cada patrón: (número en SKILL.md, nombre, expresión regular).
+# Cada patrón: (número en SKILL.md, nombre, expresión regular[, descartar]).
+# "descartar(texto, marca)" devuelve True cuando la marca es un falso positivo conocido.
 # Las expresiones ignoran mayúsculas salvo donde la mayúscula es la señal.
 I = re.IGNORECASE
 
-PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
+# Sustantivos de negocio donde "asociado a" nombra una relación clara.
+NEGOCIO = re.compile(
+    r"(?:costos?|gastos?|riesgos?|cargos?|recargos?|pagos?|multas?|fletes?|trámites?"
+    r"|permisos?|ingresos?|impuestos?|operaci\w+)\W+(?:\w+\W+){0,5}$", I)
+
+
+def tras_negocio(texto: str, marca: re.Match[str]) -> bool:
+    return bool(NEGOCIO.search(texto[max(0, marca.start() - 40):marca.start()]))
+
+
+def en_titulo(texto: str, marca: re.Match[str]) -> bool:
+    """Los títulos y las líneas en negrita usan la raya como separador, no como conector."""
+    inicio = texto.rfind("\n", 0, marca.start()) + 1
+    fin = texto.find("\n", marca.end())
+    linea = texto[inicio:fin if fin != -1 else len(texto)].strip()
+    return linea.startswith(("#", "**", "[")) or linea.isupper()
+
+
+def pregunta_con_apertura(texto: str, marca: re.Match[str]) -> bool:
+    if not marca.group(0).endswith("?"):
+        return False
+    inicio = texto.rfind("\n", 0, marca.start()) + 1
+    return "¿" in texto[inicio:marca.start()]
+
+# Palabras que una persona usa sin problema; son señal solo si se juntan.
+# {número de patrón: marcas mínimas en un mismo párrafo}
+MINIMO_POR_PARRAFO = {12: 3}
+
+# Líneas de índice automático de Word: "[1. Introducción 3](#_Toc123)".
+INDICE = re.compile(r"^.*\]\(#[^)]*\).*$", re.M)
+
+PATRONES: list[tuple] = [
     (1, "No es X, es Y", re.compile(
         r"\bno (?:es|son|se trata de)(?: solo| solamente| simplemente| únicamente)? [^.;:\n]{1,60}?[,;] (?:es|son|sino)\b"
         r"|\bno solo [^.;\n]{1,60}?,? sino(?: también)?\b"
@@ -36,7 +68,9 @@ PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
     (5, "Discutir con nadie", re.compile(
         r"\b(?:no digo que|que quede claro|no me malinterpreten|no me malinterpretes"
         r"|podría pensarse que|sería tentador|uno podría caer en la tentación)\b", I)),
-    (8, "Rayas como conector", re.compile(r" [—–] | - |\w—\w|\w – \w")),
+    (8, "Rayas como conector", re.compile(
+        r" — |\w—\w|(?<=[a-záéíóúñ,;)]) [–-] (?=[a-záéíóúñ¿¡(])"
+        r"| -[a-záéíóúñ][^-\n]{2,60}[a-záéíóúñ]- "), en_titulo),
     (9, "Calificadores apilados", re.compile(
         r"\b(?:podría eventualmente|quizás podría|en cierta medida|hasta cierto punto|de alguna manera)\b", I)),
     (10, "Conectores de plantilla", re.compile(
@@ -58,9 +92,11 @@ PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
         r"|en la era digital|en los tiempos que corren|el futuro se ve prometedor|tiempos emocionantes"
         r"|un paso en la dirección correcta)\b", I)),
     (14, "Relación vaga", re.compile(
-        r"\b(?:asociad[oa]s? a|vinculad[oa]s? (?:a|con)|ligad[oa]s? a|en el marco de|de la mano de)\b", I)),
+        r"\b(?:asociad[oa]s? a|vinculad[oa]s? (?:a|con)|ligad[oa]s? a|de la mano de"
+        r"|en el marco (?:de|del)(?! (?:la |el )?(?:asignatura|evaluaci|ramo|taller|curso|simula"
+        r"|actividad|módulo|unidad|programa)))\b", I), tras_negocio),
     (15, "Gerundio colgado", re.compile(
-        r", (?:\w+ndo(?:se|la|lo|las|los)?|convirtiéndose|consolidándose|posicionándose)\b(?! que)", I)),
+        r", (?!cuando\b)(?:\w+(?:ando|iendo|yendo)(?:se|la|lo|las|los)?|convirtiéndose|consolidándose|posicionándose)\b(?! que)", I)),
     (16, "Lenguaje publicitario", re.compile(
         r"\b(?:enclavad[oa]|en el corazón de|rica herencia|rico patrimonio|belleza natural|de ensueño"
         r"|imperdible|joya escondida|experiencia única|compromiso con la excelencia|de clase mundial"
@@ -70,13 +106,16 @@ PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
         r"|diversos estudios|numerosas investigaciones|numerosos estudios|según analistas)\b", I)),
     (18, "Evitar ser y tener", re.compile(
         r"\b(?:se erige como|se posiciona como|se consolida como|funge como|cuenta con|ostenta|alberga)\b", I)),
+    (19, "Negritas decorativas", re.compile(
+        r"(?m)^[ \t]*(?:[-*•][ \t]+)?\*\*[^*\n]{2,70}:\*\*[ \t]+(?:\S+[ \t]+){5,}\S+")),
     (20, "Mayúscula en cada palabra del título", re.compile(
-        r"(?m)^#{1,6} (?:\S+ )*?[A-ZÁÉÍÓÚÑ]\w+ (?:[A-ZÁÉÍÓÚÑ]\w+ ){2,}")),
+        r"(?m)^#{1,6} (?:[^\w\s#]+ )?(?:\d+(?:\.\d+)*\.? )?[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+"
+        r"(?: (?:(?:de|del|la|las|el|los|y|e|en|para|por|con|a|al|o|u) )*[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+){2,}")),
     (21, "Ortotipografía a la inglesa", re.compile(
         r"(?<![¿\w])\b[A-ZÁÉÍÓÚÑ][^¿?.!\n]{2,80}\?"
         r"|\b(?:Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) \d"
         r"|\bde (?:Enero|Febrero|Marzo|Abril|Mayo|Junio|Julio|Agosto|Septiembre|Octubre|Noviembre|Diciembre)\b"
-        r"|, y \w+[.\n]")),
+        r"|, y \w+[.\n]"), pregunta_con_apertura),
     (22, "Restos del chatbot", re.compile(
         r"¡(?:Claro|Por supuesto|Excelente pregunta|Qué buena pregunta)!|\b(?:Espero que (?:esto )?te sea útil"
         r"|Espero haberte ayudado|No dudes en|¿Quieres que|¿Te gustaría que|A continuación te presento"
@@ -84,6 +123,10 @@ PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
     (23, "Límite de conocimiento", re.compile(
         r"\b(?:mi última actualización|según la información disponible|no (?:se encuentra|está) ampliamente documentad"
         r"|en las fuentes proporcionadas|mantiene un perfil bajo|se cree que)", I)),
+    (25, "Escribir sobre el documento", re.compile(
+        r"\b(?:el presente|este) (?:informe|documento|trabajo) (?:se (?:elabora|organiza|estructura|presenta|divide|enmarca)"
+        r"|tiene (?:como )?(?:por )?(?:objetivo|el propósito)|busca|presenta|expone|analiza|documenta|evalúa|detalla|describe|aborda|da cuenta)\b"
+        r"|\bla siguiente tabla\b|\bse organiza en \w+ (?:secciones|capítulos|partes)\b", I)),
     (27, "Calcos del inglés", re.compile(
         r"\b(?:juega(?:n)? un rol|jugar un rol|tomar lugar|tomó lugar|hace sentido|hacer sentido|en base a"
         r"|a nivel de|en orden a|eventualmente)\b", I)),
@@ -91,9 +134,19 @@ PATRONES: list[tuple[int, str, re.Pattern[str]]] = [
 
 
 def marcar(texto: str) -> list[tuple[int, str, list[str]]]:
+    texto = INDICE.sub("", texto)
     resultados = []
-    for numero, nombre, patron in PATRONES:
-        hallazgos = [m.group(0).strip() for m in patron.finditer(texto)]
+    for numero, nombre, patron, *descartar in PATRONES:
+        hallazgos = []
+        for m in patron.finditer(texto):
+            if descartar and descartar[0](texto, m):
+                continue
+            hallazgos.append(m.group(0).strip())
+        minimo = MINIMO_POR_PARRAFO.get(numero)
+        if minimo:
+            hallazgos = [h for parrafo in re.split(r"\n\s*\n", texto)
+                         if len(grupo := [m.group(0).strip() for m in patron.finditer(parrafo)]) >= minimo
+                         for h in grupo]
         if hallazgos:
             resultados.append((numero, nombre, hallazgos))
     return resultados
@@ -116,7 +169,7 @@ def main() -> None:
         print(f"§{numero:<3} {nombre} ({len(hallazgos)}): {ejemplos}")
     densidad = total / palabras * 100
     print(f"\n{total} señales en {palabras} palabras: {densidad:.1f} por cada 100 palabras.")
-    print("El umbral no está calibrado: compara con textos tuyos del mismo tipo.")
+    print("Referencia de densidad en docs/calibracion.md; compara con textos tuyos del mismo tipo.")
 
 
 if __name__ == "__main__":

@@ -56,6 +56,17 @@ No hay un estudio académico de frecuencia de palabras de IA en español compara
 
 Estas listas no publican su método, así que el §12 las trata como señales que pesan en grupo, nunca solas.
 
+## Calibración con informes reales
+
+En 1.1.0 medí el detector con 9 informes de un curso de negocios. El resultado completo está en [calibracion.md](calibracion.md). Lo que cambia el respaldo de los patrones:
+
+- **§25** suma "el presente informe analiza, documenta, expone...", 8 veces en 7 informes.
+- **§15** suma "asegurando", "manteniendo" y "priorizando", que aparecen en 4 a 5 informes.
+- **§12 y §14** tienen una excepción para el lenguaje de negocios: "optimizar el uso de la planta", "factores clave de éxito" y "costos asociados a la operación" no son señal.
+- **§19** ya estaba en la skill, pero el detector no lo buscaba. Ahora lo hace.
+
+Es un solo curso y un solo semestre, así que sirve para ajustar el detector, no para fijar umbrales.
+
 ## Normas del español usadas
 
 Algunas señales no necesitan estudio porque contradicen la norma: la IA calca el inglés y la norma dice otra cosa.
@@ -75,10 +86,11 @@ Algunas señales no necesitan estudio porque contradicen la norma: la IA calca e
 | Estudio en español | 6, 7, 8, 10, 11, 15, 21, 28 | Coincide con diferencias medidas en corpus en español (sintaxis, puntuación, uniformidad, falta de voz) |
 | Norma RAE o FundéuRAE | 8, 11, 15, 20, 21, 27 | La forma de IA contradice la norma o el uso recomendado |
 | Listas de frases | 4, 10, 12, 16, 18, 22 | Listas de detectores y prensa, sin método publicado |
+| Informes reales (1.1.0) | 12, 14, 15, 19, 25 | Frecuencias medidas en 9 informes de un curso; ver [calibracion.md](calibracion.md) |
 
 ## Diferencias con la skill en inglés
 
-| Inglés (humanizer 3.1.0) | Español (humanizar 1.0.0) | Motivo |
+| Inglés (humanizer 3.1.0) | Español (humanizar 1.1.0) | Motivo |
 |--------------------------|---------------------------|--------|
 | §6 Forced triads | §6 Tríadas y pares forzados | En español abundan también los pares de adjetivos sinónimos ("claro y conciso") |
 | §8 Prohibición de rayas | §8 Rayas a la inglesa | La raya de inciso es norma en español |
@@ -95,5 +107,5 @@ Algunas señales no necesitan estudio porque contradicen la norma: la IA calca e
 
 1. **Leer el PDF de Alonso Simón et al.** y ajustar §8, §10, §11 y §21 a sus 17 variables.
 2. **Medir frecuencias.** Con el corpus de AuTexTification (parte en español), contar cuántas veces aparece cada palabra y frase del §12 por cada mil palabras en textos humanos y de IA. Mantener solo las que aparezcan claramente más en IA. El script `scripts/marcar.py` sirve de base para ese conteo.
-3. **Probar con textos propios.** Pedirle a varios modelos actuales textos del tipo que más se escribe (correos, informes, publicaciones de LinkedIn), pasarles la skill y revisar a ciegas si el resultado suena mejor.
+3. **Probar con textos propios.** La primera prueba, con informes, está en [calibracion.md](calibracion.md). Falta hacerla con correos y publicaciones de LinkedIn, y revisar a ciegas si el resultado suena mejor.
 4. **Actualizar las listas por modelo.** Las palabras de moda cambian con cada versión; las de 2023 ("crucial", "profundizar") pueden no ser las de 2026.
